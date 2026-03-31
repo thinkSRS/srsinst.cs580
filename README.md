@@ -15,9 +15,8 @@ To install `srsinst.cs580` as an instrument driver, use `pip` from the command l
 
 ```python
 from srsinst.cs580 import CS580
-from srsgui.inst import SerialInterface
 
-cs580 = CS580(SerialInterface, 'COM3')
+cs580 = CS580('serial', 'COM3')
 cs580.check_id()
 
 # Configure
