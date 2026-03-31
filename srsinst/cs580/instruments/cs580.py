@@ -24,6 +24,8 @@ class CS580(Instrument):
     ]
 
     def __init__(self, interface_type=None, *args):
+        if interface_type in (SerialInterface, SerialInterface.NAME) and len(args) == 1:
+            args = (args[0], 9600)
         super().__init__(interface_type, *args)
 
         self.config    = Configuration(self)
@@ -31,6 +33,11 @@ class CS580(Instrument):
         self.setup     = Setup(self)
         self.interface = Interface(self)
         self.status    = Status(self)
+
+    def connect(self, interface_type, *args):
+        if interface_type in (SerialInterface, SerialInterface.NAME) and len(args) == 1:
+            args = (args[0], 9600)
+        super().connect(interface_type, *args)
 
     def reset(self):
         self.send('*RST')
