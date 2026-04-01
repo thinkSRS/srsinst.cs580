@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "srsinst.cs580"
 description = "Instrument driver package for the CS580 Voltage Controlled Current Source from Stanford Research Systems"
+readme = "README.md"
 requires-python = ">=3.7"
 keywords = ["CS580", "SRS", "Stanford Research Systems", "current source"]
 license = {text = "MIT license"}
@@ -26,3 +27,7 @@ dynamic = ["version"]
 
 [tool.setuptools.dynamic]
 version = {attr = "srsinst.cs580.__version__"}
+
+[project.urls]
+homepage = "https://github.com/thinkSRS/srsinst.cs580"
+repository = "https://github.com/thinkSRS/srsinst.cs580.git"
