@@ -55,3 +55,25 @@ cs580.reset()
 The CS580 communicates via RS-232 at a fixed 9600 baud, 8-bit, no parity, no flow control.
 Isolated connectivity to GPIB, RS-232, and Ethernet is available through the SX199
 Optical Interface Controller (not yet implemented in this driver).
+
+## Running the integration tests
+
+The test suite exercises every driver command and method against a live CS580 over RS-232.
+`pytest` must be installed:
+
+    pip install pytest
+
+Connect the CS580 to the PC via RS-232, then run:
+
+    pytest -v -s tests/ --port COM3
+
+Replace `COM3` with the actual COM port. The `-s` flag is required so the
+confirmation prompt is visible in the terminal.
+
+If `--port` is omitted you will be prompted to enter the port interactively.
+Either way, a confirmation prompt is shown before any commands are sent to the
+instrument, giving you a chance to verify the connection first.
+
+> **Note:** These tests require physical hardware. All 98 tests should pass
+> against a normally functioning CS580. Unexpected failures most likely
+> indicate a driver issue rather than an instrument fault.
