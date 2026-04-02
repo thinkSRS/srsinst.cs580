@@ -6,4 +6,4 @@
 from .instruments.cs580 import CS580
 from .instruments.keys import Keys
 
-__version__ = '0.2'
+__version__ = '0.2.3'
