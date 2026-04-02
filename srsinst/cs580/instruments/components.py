@@ -124,6 +124,27 @@ class Status(Component):
         3: Keys.BothOverload,
     }
 
+    # OVLD is binary-weighted: bit 0 = compliance limit, bit 1 = analog input
+    OverloadBitDict = {
+        Keys.OutputOverload: 0,
+        Keys.InputOverload:  1,
+    }
+
+    # ESR bit positions (IEEE 488.2)
+    EsrBitDict = {
+        Keys.OPC: 0,
+        Keys.QYE: 2,
+        Keys.DDE: 3,
+        Keys.EXE: 4,
+        Keys.CME: 5,
+    }
+
+    # STB bit positions
+    StbBitDict = {
+        Keys.ESB: 5,
+        Keys.MSS: 6,
+    }
+
     # OVLD? — overload status (query only).
     # 0=none, 1=compliance limit (output), 2=analog input, 3=both.
     overload = IntGetCommand('OVLD')
@@ -182,17 +203,40 @@ class Status(Component):
         self.comm.send('*CLS')
 
     def get_status_text(self):
-        """Return a human-readable summary of current status."""
+        """Return a human-readable summary of any active errors or status bits.
+
+        Follows the SR860 pattern: only set conditions are reported.
+        Returns 'OK' when no errors or overloads are present.
+        Note: reading ESR, LEXE, and LCME clears those registers.
+        """
+        msg = ''
+
         ovld = self.overload
-        ovld_str = self.OverloadDict.get(ovld, f'unknown ({ovld})')
-        stb  = self.get_status_byte()
-        esr  = self.get_esr()
+        if ovld:
+            for key, bit in self.OverloadBitDict.items():
+                if 2 ** bit & ovld:
+                    msg += 'Overload bit {}, {} is set, '.format(bit, key)
+
+        esr = self.get_esr()
+        if esr:
+            for key, bit in self.EsrBitDict.items():
+                if 2 ** bit & esr:
+                    msg += 'ESR bit {}, {} is set, '.format(bit, key)
+
         lexe = self.last_execution_error
+        if lexe:
+            msg += 'Execution error {}, '.format(lexe)
+
         lcme = self.last_command_error
-        return (
-            f' Overload: {ovld_str}\n'
-            f' Status byte: {stb}\n'
-            f' Event status: {esr}\n'
-            f' Last execution error: {lexe}\n'
-            f' Last command error: {lcme}\n'
-        )
+        if lcme:
+            msg += 'Command error {}, '.format(lcme)
+
+        stb = self.get_status_byte()
+        if stb:
+            for key, bit in self.StbBitDict.items():
+                if 2 ** bit & stb:
+                    msg += 'STB bit {}, {} is set, '.format(bit, key)
+
+        if msg == '':
+            return 'OK'
+        return msg[:-2]  # strip trailing ', '

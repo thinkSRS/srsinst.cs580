@@ -584,17 +584,16 @@ class TestStatus:
 
     # ── get_status_text() ─────────────────────────────────────────────────────
 
-    def test_get_status_text_is_nonempty_string(self, cs):
+    def test_get_status_text_ok_when_clean(self, cs):
+        """With no errors or overloads, get_status_text() should return 'OK'."""
         text = cs.status.get_status_text()
-        assert isinstance(text, str)
-        assert len(text) > 0
+        assert text == 'OK'
 
-    def test_get_status_text_contains_expected_fields(self, cs):
+    def test_get_status_text_reports_error_condition(self, cs):
+        """When a CME error is present, get_status_text() should report it."""
+        cs.send('*IDN')   # missing '?' → CME → sets ESR bit 5
         text = cs.status.get_status_text()
-        for field in ("Overload", "Status byte", "execution error"):
-            assert field.lower() in text.lower(), (
-                f"Expected '{field}' in get_status_text() output"
-            )
+        assert 'CME' in text or 'Command error' in text
 
 
 # ── TestInstrumentBaseMethods ─────────────────────────────────────────────────
