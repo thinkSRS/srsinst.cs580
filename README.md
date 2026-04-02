@@ -38,6 +38,9 @@ cs580.config.output = False
 cs580.reset()
 ```
 
+See [test_cs580.py](tests/test_cs580.py) for a full set of examples
+  excercising all of the CS580 commands and methods.
+
 `CS580` is built on [srsgui](https://pypi.org/project/srsgui/).
 
 ## Components
