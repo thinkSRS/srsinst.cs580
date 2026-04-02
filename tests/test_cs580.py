@@ -67,8 +67,8 @@ class TestReset:
 
     def test_reset_defaults(self, cs):
         cs.reset()
-        assert cs.config.gain         == Keys.G1mA,   "GAIN default should be G1mA"
-        assert cs.config.analog_input is True,         "INPT default should be ON"
+        assert cs.config.gain         == Keys.G1mA,   "GAIN default should be G1mA (1 mA/V)"
+        assert cs.config.analog_input is True,        "INPT default should be ON"
         assert cs.config.speed        == Keys.Fast,   "RESP default should be FAST"
         assert cs.config.shield       == Keys.Return, "SHLD default should be RETURN"
         assert cs.config.isolation    == Keys.Float,  "ISOL default should be FLOAT"
@@ -100,17 +100,17 @@ class TestConfiguration:
     # ── GAIN ──────────────────────────────────────────────────────────────────
 
     def test_gain_key_min(self, cs):
-        cs.config.gain = Keys.G1nA
+        cs.config.gain = '1nA'
         assert cs.config.gain == Keys.G1nA
         no_errors(cs)
 
     def test_gain_key_mid(self, cs):
-        cs.config.gain = Keys.G10uA
+        cs.config.gain = '10uA'
         assert cs.config.gain == Keys.G10uA
         no_errors(cs)
 
     def test_gain_key_max(self, cs):
-        cs.config.gain = Keys.G50mA
+        cs.config.gain = '50mA'
         assert cs.config.gain == Keys.G50mA
         no_errors(cs)
 
@@ -203,12 +203,12 @@ class TestConfiguration:
     # ── RESP ──────────────────────────────────────────────────────────────────
 
     def test_resp_fast(self, cs):
-        cs.config.speed = Keys.Fast
+        cs.config.speed = 'fast'
         assert cs.config.speed == Keys.Fast
         no_errors(cs)
 
     def test_resp_slow(self, cs):
-        cs.config.speed = Keys.Slow
+        cs.config.speed = 'slow'
         assert cs.config.speed == Keys.Slow
         no_errors(cs)
 
@@ -233,12 +233,12 @@ class TestConfiguration:
     # ── SHLD ──────────────────────────────────────────────────────────────────
 
     def test_shld_guard(self, cs):
-        cs.config.shield = Keys.Guard
+        cs.config.shield = 'guard'
         assert cs.config.shield == Keys.Guard
         no_errors(cs)
 
     def test_shld_return(self, cs):
-        cs.config.shield = Keys.Return
+        cs.config.shield = 'return'
         assert cs.config.shield == Keys.Return
         no_errors(cs)
 
@@ -270,12 +270,12 @@ class TestConfiguration:
     # ── ISOL ──────────────────────────────────────────────────────────────────
 
     def test_isol_ground(self, cs):
-        cs.config.isolation = Keys.Ground
+        cs.config.isolation = 'ground'
         assert cs.config.isolation == Keys.Ground
         no_errors(cs)
 
     def test_isol_float(self, cs):
-        cs.config.isolation = Keys.Float
+        cs.config.isolation = 'float'
         assert cs.config.isolation == Keys.Float
         no_errors(cs)
 
